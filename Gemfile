@@ -83,6 +83,7 @@ gem 'htmlentities'
 gem 'mail', '2.6.6'
 gem 'mime-types'
 gem 'valid_email2'
+gem 'gpgme', '2.0.16'
 
 # feature - business hours
 gem 'biz'

@@ -158,6 +158,8 @@ GEM
       retriable (~> 2.1)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
+    gpgme (2.0.16)
+      mini_portile2 (~> 2.3)
     guard (2.14.1)
       formatador (>= 0.2.4)
       listen (>= 2.7, < 4.0)
@@ -490,6 +492,7 @@ DEPENDENCIES
   factory_bot_rails
   figaro
   github_changelog_generator
+  gpgme (= 2.0.16)
   guard
   guard-livereload
   guard-symlink
