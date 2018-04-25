@@ -71,6 +71,7 @@ end
 
 user_key = keys['zammad-user@example.org']['pub']
 system_key = keys['zammad-system@example.com']['sec']
+# TODO: move messages to fixtures: https://relishapp.com/rspec/rspec-rails/v/3-5/docs/file-fixture
 message_to_system = '-----BEGIN PGP MESSAGE-----
 
 hQEMAykSl5H8xcQ9AQgAqKiPOZyir8r3yZGhFosuSBlDUPU32imVkOPKkFfH8kgs

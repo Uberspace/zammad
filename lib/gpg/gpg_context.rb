@@ -24,6 +24,7 @@ module GPG
 
     keysets.each do |keyset|
       if keyset.kind_of?(Array)
+        # TODO: think about usecases for this again and maybe remove it to keep things simple
         keys << keyset.map { |k| parse_key(k) }
       else
         keys << parse_key(keyset)
