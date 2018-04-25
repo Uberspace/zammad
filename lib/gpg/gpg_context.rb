@@ -39,6 +39,7 @@ module GPG
     # TODO: lock
     begin
       GPGME::Engine.home_dir = home_dir
+      # TODO: use GPGME::Crypto.new
       ctx = GPGME::Ctx.new(:armor => true)
 
       yield(ctx, *parse_keysets(keysets))

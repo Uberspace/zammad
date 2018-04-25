@@ -2,8 +2,8 @@ module GPG
   class Message
     def initialize(content, user_key, system_key)
       @content = content
-      @user_key = user_key
-      @system_key = system_key
+      @user_key = user_key  # TODO: enforce that this is public key
+      @system_key = system_key  # TODO: enforce that this is secret key
 
       gpg_context  # test if keys can be imported at all
     end
@@ -69,6 +69,7 @@ module GPG
 
     def sign
       if encrypted?
+        # TODO: test this
         raise ArgumentError, "cannot sign an encrypted message"
       end
 
