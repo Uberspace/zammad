@@ -111,4 +111,10 @@ hQIMAwAAAAAAAAAAARAAhDveX4y7SZOFv1LCk2YfMYiizQSBwqS5OkleqCBGaI6T
     expect(msg.decryption_error).to be_a(GPGME::Error::NoData)
     expect(msg).not_to be_decryptable
   }
+  specify {
+    msg = GPG::Message.new('foo', user_key, system_key)
+    expect(msg.sign).to start_with '-----BEGIN PGP SIGNATURE-----'
+    expect(msg.sign).to end_with "-----END PGP SIGNATURE-----\n"
+    expect(msg.sign).not_to include 'foo'
+  }
 end

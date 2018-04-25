@@ -67,8 +67,17 @@ module GPG
       raise NotImplementedError
     end
 
-    def sign(key)
-      raise NotImplementedError
+    def sign
+      if encrypted?
+        raise ArgumentError, "cannot sign an encrypted message"
+      end
+
+      gpg_context do |ctx, user_key, system_key|
+        # TODO: make convince GPG.context to make system_key into a GPGME::Key object
+        ctx.add_signer(GPGME::Key.get(system_key))
+        r = ctx.sign(GPGME::Data.new(@content), GPGME::Data.new(), GPGME::SIG_MODE_DETACH)
+        return r.to_s
+      end
     end
   end
 end
