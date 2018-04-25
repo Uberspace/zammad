@@ -69,7 +69,6 @@ module GPG
 
     def sign
       if encrypted?
-        # TODO: test this
         raise ArgumentError, "cannot sign an encrypted message"
       end
 

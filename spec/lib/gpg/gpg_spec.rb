@@ -149,4 +149,9 @@ hQIMAwAAAAAAAAAAARAAhDveX4y7SZOFv1LCk2YfMYiizQSBwqS5OkleqCBGaI6T
     expect(signature).to end_with "-----END PGP SIGNATURE-----\n"
     expect(signature).not_to include 'foo'
   end
+
+  it 'should refuse to sign encrypted content' do
+    msg = GPG::Message.new(message_to_system, user_key, system_key)
+    expect{ msg.sign }.to raise_error('cannot sign an encrypted message')
+  end
 end
