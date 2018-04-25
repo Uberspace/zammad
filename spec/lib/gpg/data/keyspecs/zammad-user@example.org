@@ -1,0 +1,7 @@
+Key-Type: default
+Subkey-Type: default
+Name-Real: Zammad User
+Name-Email: zammad-user@example.org
+Expire-Date: 0
+%no-protection
+%commit
