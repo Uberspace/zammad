@@ -63,6 +63,10 @@ RSpec.describe "GPG.context" do
   it 'should not accept an non-key string' do
     expect { |b| GPG.context('foo', &b) }.to raise_error('key cannot be imported')
   end
+
+  it 'should not accept an invalid key' do
+    expect { |b| GPG.context(keys['zammad-user@example.org']['pub'].gsub('A', 'B'), &b) }.to raise_error('key cannot be imported')
+  end
 end
 
 user_key = keys['zammad-user@example.org']['pub']
