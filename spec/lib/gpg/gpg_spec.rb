@@ -145,7 +145,7 @@ hQIMAwAAAAAAAAAAARAAhDveX4y7SZOFv1LCk2YfMYiizQSBwqS5OkleqCBGaI6T
   end
 
   it 'should generate detached signatures' do
-    signature = GPG::Message.new('foo', user_key, system_key).sign
+    signature = GPG::Message.new('foo', user_key, system_key).detached_signature
     expect(signature).to start_with '-----BEGIN PGP SIGNATURE-----'
     expect(signature).to end_with "-----END PGP SIGNATURE-----\n"
     expect(signature).not_to include 'foo'
@@ -153,6 +153,6 @@ hQIMAwAAAAAAAAAAARAAhDveX4y7SZOFv1LCk2YfMYiizQSBwqS5OkleqCBGaI6T
 
   it 'should refuse to sign encrypted content' do
     msg = GPG::Message.new(message_to_system, user_key, system_key)
-    expect{ msg.sign }.to raise_error('cannot sign an encrypted message')
+    expect{ msg.detached_signature }.to raise_error('cannot sign an encrypted message')
   end
 end

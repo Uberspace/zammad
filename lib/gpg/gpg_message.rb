@@ -14,19 +14,21 @@ module GPG
       end
     end
 
-    def signed?
+    def inline_signed?
+      # "normal" signature starting with '-----BEGIN PGP MESSAGE-----', have to ask API
+      # "clear" signature, not encrypted starting with '-----BEGIN PGP SIGNED MESSAGE-----'
       raise NotImplementedError
     end
 
-    def verified?(signature = nil)
+    def verified?(detached_signature = nil)
       raise NotImplementedError
     end
 
-    def signature_error
+    def verify_error
       raise NotImplementedError
     end
 
-    def signature_key
+    def verified_key
       raise NotImplementedError
     end
 
@@ -63,11 +65,11 @@ module GPG
       return @decryption_error
     end
 
-    def encrypt(sign_key = nil)
+    def encrypt(sign = true)
       raise NotImplementedError
     end
 
-    def sign
+    def detached_signature
       if encrypted?
         raise ArgumentError, "cannot sign an encrypted message"
       end
