@@ -36,7 +36,9 @@ module GPG
     end
 
     def decryptable?
-      encrypted?
+      return false unless encrypted?
+      return false if plaintext.nil?
+      return true
     end
 
     def plaintext
@@ -44,15 +46,20 @@ module GPG
         @content
       else
         gpg_context do |ctx, *args|
-          # TODO: think about wrapping this in GPG::Context, so we do not have to deal with GPGME:: directly
-          data = ctx.decrypt(GPGME::Data.new(@content))
-          return data.to_s
+          begin
+            # TODO: think about wrapping this in GPG::Context, so we do not have to deal with GPGME:: directly
+            data = ctx.decrypt(GPGME::Data.new(@content))
+            return data.to_s
+          rescue Exception => e
+            @decryption_error = e
+            return nil
+          end
         end
       end
     end
 
     def decryption_error
-      raise NotImplementedError
+      return @decryption_error
     end
 
     def encrypt(sign_key = nil)
