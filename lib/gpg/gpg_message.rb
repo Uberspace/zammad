@@ -37,7 +37,7 @@ module GPG
 
     def decryptable?
       return false unless encrypted?
-      return false if plaintext.nil?
+      return false if plaintext.nil?  # TODO: cache result, this is expensive
       return true
     end
 
@@ -50,7 +50,7 @@ module GPG
             # TODO: think about wrapping this in GPG::Context, so we do not have to deal with GPGME:: directly
             data = ctx.decrypt(GPGME::Data.new(@content))
             return data.to_s
-          rescue Exception => e
+          rescue Exception => e  # TODO: scope this to GPG errors only
             @decryption_error = e
             return nil
           end
@@ -59,6 +59,7 @@ module GPG
     end
 
     def decryption_error
+      # TODO: what if we did not attempt to decrypt yet?
       return @decryption_error
     end
 
