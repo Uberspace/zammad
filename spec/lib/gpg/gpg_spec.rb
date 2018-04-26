@@ -18,8 +18,7 @@ end
 
 keys = load_key_samples(File.dirname(__FILE__) + '/data')
 
-RSpec.describe "GPG.context" do
-  it "should yield control" do
+RSpec.describe 'GPG.context' do
   it 'should yield control' do
     expect { |b| GPG.context(&b) }.to yield_control
     expect { |b| GPG.context(&b) }.to yield_with_args(GPGME::Ctx)
@@ -48,10 +47,10 @@ RSpec.describe "GPG.context" do
       &b)
     }.to yield_with_args(
       GPGME::Ctx,
-      "25B6F98D353D3395A138255E6AF9F44B125ABB64",
+      '25B6F98D353D3395A138255E6AF9F44B125ABB64',
       [
-        "25B6F98D353D3395A138255E6AF9F44B125ABB64",
-        "8F8A943A9DF60FB782DE3ED5719FFA72B62E79AD",
+        '25B6F98D353D3395A138255E6AF9F44B125ABB64',
+        '8F8A943A9DF60FB782DE3ED5719FFA72B62E79AD',
       ],
     )
   end
@@ -111,8 +110,7 @@ MOui
 =RkRs
 -----END PGP MESSAGE-----'
 
-RSpec.describe "GPG.message" do
-  it "should handle unecrypted messages" do
+RSpec.describe 'GPG.message' do
   it 'should handle unecrypted messages' do
     msg = GPG::Message.new('foo', user_key, system_key)
     expect(msg).not_to be_encrypted

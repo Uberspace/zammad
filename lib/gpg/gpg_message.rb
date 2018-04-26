@@ -33,21 +33,20 @@ module GPG
     end
 
     def encrypted?
-      return @content.start_with?('-----BEGIN PGP MESSAGE-----') &&
-          @content.end_with?('-----END PGP MESSAGE-----')
+      @content.start_with?('-----BEGIN PGP MESSAGE-----') && @content.end_with?('-----END PGP MESSAGE-----')
     end
 
     def decryptable?
       return false unless encrypted?
       return false if plaintext.nil?  # TODO: cache result, this is expensive
-      return true
+      true
     end
 
     def plaintext
-      if not encrypted?
+      if !encrypted?
         @content
       else
-        gpg_context do |ctx, *args|
+        gpg_context do |ctx, *_|
           begin
             # TODO: think about wrapping this in GPG::Context, so we do not have to deal with GPGME:: directly
             data = ctx.decrypt(GPGME::Data.new(@content))
@@ -62,7 +61,7 @@ module GPG
 
     def decryption_error
       # TODO: what if we did not attempt to decrypt yet?
-      return @decryption_error
+      @decryption_error
     end
 
     def encrypt(sign = true)
@@ -71,10 +70,10 @@ module GPG
 
     def detached_signature
       if encrypted?
-        raise ArgumentError, "cannot sign an encrypted message"
+        raise ArgumentError, 'cannot sign an encrypted message'
       end
 
-      gpg_context do |ctx, user_key, system_key|
+      gpg_context do |ctx, _, system_key|
         # TODO: make convince GPG.context to make system_key into a GPGME::Key object
         ctx.add_signer(GPGME::Key.get(system_key))
         r = ctx.sign(GPGME::Data.new(@content), GPGME::Data.new(), GPGME::SIG_MODE_DETACH)
