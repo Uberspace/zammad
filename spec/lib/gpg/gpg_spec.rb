@@ -109,6 +109,73 @@ ot2YLdEgHHcSu1G6DcKnyedn8OofZKKhiso2SicQmX2wvvbNxB84H5dugpqWAKlc
 MOui
 =RkRs
 -----END PGP MESSAGE-----'
+message_signed_normal = '-----BEGIN PGP MESSAGE-----
+
+owGbwMvMwMGY9fOLt1DU7hTG04JJDFGPYk0yMhWqEnNzE1OMuDoZfVgYGDkYzMQU
+WVS3/ew1tTWeutBCNQ6mh5UJqMFcQgaiXre0OLXIIbUiMbcgJ1UvvyidgYtTAKZ0
+KQv7f2/XTAnX/dVWrFxH9v7KO/Z+6Z/LF4wuHXY4kfk/pvHu5fP3H08+KTp3Huvc
+gkf3boZsfRB0wVjmo8MGuyz3/qr9E7ZOfXoo/NT+x2zBIv5qe9JlVjc0xN0M/h1o
+Fr4u6u3E8izezmOrnTlXbvy84vU6AdPCnjVF/3TY1v+buuysa1Oz1j4m+TO/Jz2b
+Vrx1ruWEO1Fiu1XTlZ2WX5zJwvqiRPpgm6uT4U0+xsklHeomS310xDKTvOXmrYnY
+K7XDZNVfg6Yqzx/Gy5tWWentyt8dWshg+/uyqwyT5susY/eON/38+8Rap3L/apt3
+W2e/vSvWZeSaIPSH78vdDWnbup14BO0CJwq90lLTitdNywMA
+=UAkO
+-----END PGP MESSAGE-----'
+message_signed_clear = '-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+hi zammad3
+-----BEGIN PGP SIGNATURE-----
+
+iQFMBAEBCAA2FiEEJbb5jTU9M5WhOCVeavn0SxJau2QFAlriXVAYHHphbW1hZC11
+c2VyQGV4YW1wbGUub3JnAAoJEGr59EsSWrtkINAIAIBTBpbwRn1w0sgVGNsKO8y9
+Gee7Ijnd1q6iRn2Z1AKhMUvpkK3xxaYs9mS2R0A+c+38/DO/DIBkMA6SpVdkE19M
+0JnfB/SyigFPwGgv6io4m77ldvTunhHW9XZr3J3nO+Db77Jklg9amhT+4UKdXM0O
+Mx833OdPVe78lny00/9AYTk3kRTuOX4kI61XqFfh7pTZ5zhiqVaPb54sBJKwWbsh
+g++YB+4FI6v63m85Tk6f1eFvaPkglHe2U3R+7l8l5NQADfxDPnL8IsxTS0cwnfOE
+B5HrA2Xywqwxblo+TwsKfV3owNox/jT3v+qaD/jsIFk/ekZpP5t26vYKEP2ik5U=
+=RifJ
+-----END PGP SIGNATURE-----'
+message_signed_clear_invalid = message_signed_clear.tr('zammad3', 'zammad4')
+message_signed_clear_fake = '-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
+
+is fake
+-----BEGIN PGP SIGNATURE-----
+
+much
+-----END PGP SIGNATURE-----'
+# "hi zammad4\n"
+message_signed_detach = '-----BEGIN PGP SIGNATURE-----
+
+iQFMBAABCAA2FiEEJbb5jTU9M5WhOCVeavn0SxJau2QFAlriXYYYHHphbW1hZC11
+c2VyQGV4YW1wbGUub3JnAAoJEGr59EsSWrtkUw8IALNA52uIdAAcHxgWAekUpS6J
+tF0sZvVfdkJiEG0lXvcHbpNmXRNgrEevexQTjSdd/k8JABEeC4MwEZlnD1b5S8r6
+nR0rFkKFl4G+Q6kWNDFopdu5CHlxNL+YngO6XylrOBNw+jBR3O5MgbSuh5E5xY6g
+g4Ccp1HNaU9F2GBTFOsw3uT8gpXUCu7WD9+RXy18gfoOOa6eHt48ZZXl5q3FbfPN
+7XdPwxg/4nHQ+f36z4EBjHpihjB8iTlas693s9haOWSYBvjJpxuBQ1PZJuD5ruia
+q8k7XPAkMKUoQh3KWVZF3sSkSlLquOV/LYwXWFKxWZUF4bfFsjHPMybYqTY9ui8=
+=+Jsu
+-----END PGP SIGNATURE-----'
+message_signed_encrypted = '-----BEGIN PGP MESSAGE-----
+
+hQEMAykSl5H8xcQ9AQgAnX1rPOg6VBHte1R/IqPCFdw1EFNBt4vnthAoH2oPy5Bd
+I6+YNuFhmZTKBvYNK6fIkY30bKcH62lePFlQgAtOYv/CDaIbEuPeNnlCgX8Q3BBm
+0cEDOhCbGQrOR1Vtpo1brSx72XVoYvqCLq4GxCWWO8H0ieXRnDk2L6FkhAakCKfj
+eOSB4JGznLcJyCxKGHSnW7qt43fcymh5CmS2M/dzuriLnLiU1NmOcsbzv4Qtc9jv
+evc8vlqwsUZHrSAZxXb4SO7MViBZuZMLDJwtK7vFo9fljpgvLqLxuZ21DjtudFv4
+rAyKsZLdGsTvFMcaRZguxKOtYbd9tyf4OyQYGUhx09LA8gFm+QhTgN53hUSSvotk
+YdoeG0fq6ieXNYz6ESXEPWn3D4GcpJJM98wtP4O+XFxSCZtW5zwrRdcFTclWGIBe
+jLJ140OjDk/XPT5VGi8uR0hRHtCipc8MYgubenXj0hqKluxWphWM5+CTZs6ayo0j
+vbXp7uwltlFHmEdtL4P3gCQ7mvSqponKYJUo9K9glgnD/bwi8Q41VOKwhvpBqXHT
+NQd2xc8L7jyR1gcVAoNbegQbdWyO5+LdCz0SLMXbly1xa1h6KBYxKIlqOVPBcKZH
+5uwnSxiuinj6X7Jv7lXF277CCXID8P3r+ITEkGUYluycF/1g/kP4oxCeRRoqwLo8
+IJ5thnbLva0reNuMQRSQ+bf6ZWbAO+t7TV0A/lrhBQsfb6ajcUhqD6nQs2zAagL6
+80HlgmimaNBIdpubw5/bdRJZdk9UT6xyRdyA8L+jL8+Pz2XYhFKVjWFUYZf6q9hO
+tuLlXruVL/YFn/UdQlR7f8pmWnEQJOSWMmbdLAdRwzbsF1lPl5Hjxqt6cXy5FvCK
+7J6hnvXvESM0qTi+sY1A2I7Po74RSkl9VShuVhijUBXQZKu3
+=6o03
+-----END PGP MESSAGE-----'
 
 RSpec.describe 'GPG.message' do
   it 'should handle unecrypted messages' do
@@ -152,5 +219,69 @@ hQIMAwAAAAAAAAAAARAAhDveX4y7SZOFv1LCk2YfMYiizQSBwqS5OkleqCBGaI6T
   it 'should refuse to sign encrypted content' do
     msg = GPG::Message.new(message_to_system, user_key, system_key)
     expect{ msg.detached_signature }.to raise_error('cannot sign an encrypted message')
+  end
+
+  it 'should decrypt encrypted, signed, valid messages' do
+    msg = GPG::Message.new(message_signed_encrypted, user_key, system_key)
+    expect(msg).to be_encrypted
+    expect(msg).to be_decryptable
+    expect(msg).to have_attributes(plaintext: "hi zammad, secretly signed\n")
+
+    pending
+    expect(msg).to be_inline_signed
+    expect(msg).to be_verified
+  end
+
+  it 'should handle signed, but unecrypted messages' do
+    pending
+    msg = GPG::Message.new(message_signed_normal, user_key, system_key)
+    expect(msg.plaintext).not_to be_nil
+    expect(msg).not_to be_encrypted
+    expect(msg).not_to be_decryptable
+    expect(msg).to be_inline_signed
+    expect(msg).to be_verified
+    expect(msg).to have_attributes(plaintext: "hi zammad2\n")
+  end
+
+  it 'should handle clear signed messages' do
+    pending
+    msg = GPG::Message.new(message_signed_clear, user_key, system_key)
+    expect(msg.plaintext).not_to be_nil
+    expect(msg).not_to be_encrypted
+    expect(msg).not_to be_decryptable
+    expect(msg).to be_inline_signed
+    expect(msg).to be_verified
+    expect(msg).to have_attributes(plaintext: "hi zammad3\n")
+  end
+
+  it 'should handle messages formatted like clear signed messages' do
+    msg = GPG::Message.new(message_signed_clear_fake, user_key, system_key)
+    expect(msg.plaintext).not_to be_nil
+    expect(msg).not_to be_encrypted
+    expect(msg).not_to be_decryptable
+    expect(msg).not_to be_inline_signed
+    expect(msg).not_to be_verified
+  end
+
+  it 'should reject invalid clear signed messages' do
+    pending
+    msg = GPG::Message.new(message_signed_clear_invalid, user_key, system_key)
+    expect(msg.plaintext).not_to be_nil
+    expect(msg).not_to be_encrypted
+    expect(msg).not_to be_decryptable
+    expect(msg).to be_inline_signed
+    expect(msg).not_to be_verified
+    expect(msg).to have_attributes(plaintext: include("hi zammad4"))
+  end
+
+  it 'should handle detached signed messages' do
+    pending
+    msg = GPG::Message.new("hi zammad4\n", user_key, system_key)
+    expect(msg.plaintext).not_to be_nil
+    expect(msg).not_to be_encrypted
+    expect(msg).not_to be_decryptable
+    expect(msg).not_to be_inline_signed
+    expect(msg).not_to be_verified
+    expect(msg.verified?(message_signed_clear)).to be true
   end
 end
