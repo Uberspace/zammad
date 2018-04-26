@@ -9,11 +9,11 @@ def load_key_samples(root)
   Dir[root + '/*.sec', root + '/*.pub'].each do |key|
     email, _, type = key.rpartition('.')
     email = File.basename(email)
-    keys[email] = {} if not keys[email]
+    keys[email] = {} unless keys[email]
     keys[email][type] = File.read(key)
   end
 
-  return keys
+  keys
 end
 
 keys = load_key_samples(File.dirname(__FILE__) + '/data')
@@ -48,10 +48,7 @@ RSpec.describe 'GPG.context' do
     }.to yield_with_args(
       GPGME::Ctx,
       '25B6F98D353D3395A138255E6AF9F44B125ABB64',
-      [
-        '25B6F98D353D3395A138255E6AF9F44B125ABB64',
-        '8F8A943A9DF60FB782DE3ED5719FFA72B62E79AD',
-      ],
+      %w[25B6F98D353D3395A138255E6AF9F44B125ABB64 8F8A943A9DF60FB782DE3ED5719FFA72B62E79AD]
     )
   end
 
@@ -64,7 +61,7 @@ RSpec.describe 'GPG.context' do
   end
 
   it 'should not accept an invalid key' do
-    expect { |b| GPG.context(keys['zammad-user@example.org']['pub'].gsub('A', 'B'), &b) }.to raise_error('key cannot be imported')
+    expect { |b| GPG.context(keys['zammad-user@example.org']['pub'].tr('A', 'B'), &b) }.to raise_error('key cannot be imported')
   end
 end
 
@@ -182,21 +179,21 @@ RSpec.describe 'GPG.message' do
     msg = GPG::Message.new('foo', user_key, system_key)
     expect(msg).not_to be_encrypted
     expect(msg).not_to be_decryptable
-    expect(msg).to have_attributes(:plaintext => 'foo')
+    expect(msg).to have_attributes(plaintext: 'foo')
   end
 
   it 'should decrypt encrypted, valid messages' do
     msg = GPG::Message.new(message_to_system, user_key, system_key)
     expect(msg).to be_encrypted
     expect(msg).to be_decryptable
-    expect(msg).to have_attributes(:plaintext => "hi zammad\n")
+    expect(msg).to have_attributes(plaintext: "hi zammad\n")
   end
 
   it 'should handle encrypted messages to unknown recipients' do
     msg = GPG::Message.new(message_to_unknown_key, user_key, system_key)
     expect(msg).to be_encrypted
     expect(msg).not_to be_decryptable
-    expect(msg).to have_attributes(:plaintext => nil, :decryption_error => be_a(GPGME::Error::DecryptFailed))
+    expect(msg).to have_attributes(plaintext: nil, decryption_error: be_a(GPGME::Error::DecryptFailed))
   end
 
   it 'should handle invalid encrypted messages' do
@@ -206,7 +203,7 @@ hQIMAwAAAAAAAAAAARAAhDveX4y7SZOFv1LCk2YfMYiizQSBwqS5OkleqCBGaI6T
 -----END PGP MESSAGE-----', user_key, system_key)
     expect(msg).to be_encrypted
     expect(msg).not_to be_decryptable
-    expect(msg).to have_attributes(:plaintext => nil, :decryption_error => be_a(GPGME::Error::NoData))
+    expect(msg).to have_attributes(plaintext: nil, decryption_error: be_a(GPGME::Error::NoData))
   end
 
   it 'should generate detached signatures' do
@@ -218,7 +215,7 @@ hQIMAwAAAAAAAAAAARAAhDveX4y7SZOFv1LCk2YfMYiizQSBwqS5OkleqCBGaI6T
 
   it 'should refuse to sign encrypted content' do
     msg = GPG::Message.new(message_to_system, user_key, system_key)
-    expect{ msg.detached_signature }.to raise_error('cannot sign an encrypted message')
+    expect { msg.detached_signature }.to raise_error('cannot sign an encrypted message')
   end
 
   it 'should decrypt encrypted, signed, valid messages' do
