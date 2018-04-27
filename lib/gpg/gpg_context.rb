@@ -40,12 +40,10 @@ module GPG
     # TODO: lock
     begin
       GPGME::Engine.home_dir = home_dir
-      # TODO: use GPGME::Crypto.new
-      ctx = GPGME::Ctx.new(armor: true)
+      crypto = GPGME::Crypto.new(armor: true)
 
-      yield(ctx, *parse_keysets(keysets))
+      yield(crypto, *parse_keysets(keysets))
     ensure
-      ctx.release
       # TODO: find the right agent and kill it, or even better: tell the gpgme API to do it
       system('killall gpg-agent')
       FileUtils.remove_dir(home_dir)

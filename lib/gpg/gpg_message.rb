@@ -46,10 +46,11 @@ module GPG
       if !encrypted?
         @content
       else
-        gpg_context do |ctx, *_|
+        gpg_context do |crypto, *_|
           begin
-            # TODO: think about wrapping this in GPG::Context, so we do not have to deal with GPGME:: directly
-            data = ctx.decrypt(GPGME::Data.new(@content))
+            data = crypto.decrypt(@content) do |signature|
+              nil
+            end
             return data.to_s
           rescue Exception => e  # TODO: scope this to GPG errors only
             @decryption_error = e
@@ -73,10 +74,8 @@ module GPG
         raise ArgumentError, 'cannot sign an encrypted message'
       end
 
-      gpg_context do |ctx, _, system_key|
-        # TODO: make convince GPG.context to make system_key into a GPGME::Key object
-        ctx.add_signer(GPGME::Key.get(system_key))
-        r = ctx.sign(GPGME::Data.new(@content), GPGME::Data.new(), GPGME::SIG_MODE_DETACH)
+      gpg_context do |crypto, _, system_key|
+        r = crypto.sign @content, signer: system_key, mode: GPGME::SIG_MODE_DETACH
         return r.to_s
       end
     end

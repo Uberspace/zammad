@@ -21,19 +21,19 @@ keys = load_key_samples(File.dirname(__FILE__) + '/data')
 RSpec.describe 'GPG.context' do
   it 'should yield control' do
     expect { |b| GPG.context(&b) }.to yield_control
-    expect { |b| GPG.context(&b) }.to yield_with_args(GPGME::Ctx)
+    expect { |b| GPG.context(&b) }.to yield_with_args(GPGME::Crypto)
   end
 
   it 'should accept public keys' do
     key = keys['zammad-user@example.org']['pub']
     fpr = '25B6F98D353D3395A138255E6AF9F44B125ABB64'
-    expect { |b| GPG.context(key, &b) }.to yield_with_args(GPGME::Ctx, fpr)
+    expect { |b| GPG.context(key, &b) }.to yield_with_args(GPGME::Crypto, fpr)
   end
 
   it 'should accept private keys' do
     key = keys['zammad-system@example.com']['sec']
     fpr = '8F8A943A9DF60FB782DE3ED5719FFA72B62E79AD'
-    expect { |b| GPG.context(key, &b) }.to yield_with_args(GPGME::Ctx, fpr)
+    expect { |b| GPG.context(key, &b) }.to yield_with_args(GPGME::Crypto, fpr)
   end
 
   it 'should accept multiple keys and sets of keys' do
@@ -46,7 +46,7 @@ RSpec.describe 'GPG.context' do
         ],
       &b)
     }.to yield_with_args(
-      GPGME::Ctx,
+      GPGME::Crypto,
       '25B6F98D353D3395A138255E6AF9F44B125ABB64',
       %w[25B6F98D353D3395A138255E6AF9F44B125ABB64 8F8A943A9DF60FB782DE3ED5719FFA72B62E79AD]
     )
