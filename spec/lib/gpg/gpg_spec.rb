@@ -200,6 +200,25 @@ tuLlXruVL/YFn/UdQlR7f8pmWnEQJOSWMmbdLAdRwzbsF1lPl5Hjxqt6cXy5FvCK
 7J6hnvXvESM0qTi+sY1A2I7Po74RSkl9VShuVhijUBXQZKu3
 =6o03
 -----END PGP MESSAGE-----'
+message_wrong_key_signed_encrypted = '-----BEGIN PGP MESSAGE-----
+
+hQEMAykSl5H8xcQ9AQf+MdTkjhBdfjjupLbvEDR2N5jdX0hBP7t8eiKB39dMh9rJ
+D0NbRSStFOvJwy05u7Qy0hiDtJIbRDEVlf/b58GFP9vHEF4mHp1Z9f/ekRk0wUqp
+9xOtMogLcCY29bLC99aIk7bS4KG5uAr6eHA8TJaA55WUYB8n3Gb+HleUe54XmQ2O
+lXo2Bo7XLTpA4llFeounIa1eBAA6rAFl1t+Kqwr0cv8T1XR7P+10gZ5OU0ONwkiT
+t17UPo73bwvGyfqiCMSm7qtWuYDH2tJ8gfne9pDoGtFmODsKTopIVZRhm4Z7vIrW
+cDm7OPYpMVK98pu2xtpTxViRHBYdPLddQYwXBefaOtLA7QG+QkSvj2vGTH3I943B
+ROvXC7faYdPer0zMgJ4YSmDnVJC+684265xAE6WWKTeJozHDZdDK9quNJeA8JhVt
+H1zjb/P3PE9IpeiFPiiXI7PJ41CnMlF7Z3zM/yZ/e+obmbMHYJjRClG3oBHnglmG
+1bUuaaUwS2pIlE/LaN3fqlR4nh6KrRMcqsmlj9WG35Hy6JyVqCWydeMhqr/lGV96
+u2MSXa2ihCwe7ck/93mAQNeXrkdDvT0zqOcCyIfn/G4ZKCpadUqBX2sBpdGx8HuG
+9nSBll9DnHYpFmuylMQzPfycyzgnHnPXt6Hy3pIxfakOqpESvsHTZ1n/HDQJiTUI
+Fm7JVzVg1UOZ1fY/kLDKni38GuOOF/hvzYMDIleGC7wrqXU0IZx4l2BHQFWcIGve
+gxcwmtGo60ajLS01d1tzg260M7oHAVLaE2B2rOfxFOHEbNOoOIHzYWyc1V5VzFvY
+UozDNq8FZfSPfvMcpColtD/fL2kODQT8Jys64CBRtGiRQXaeip5BnHRm6cdFDUVL
+lLD5DvjVK3KHWYnIHEM9JnRRrlYbj8UuU5jfoe6VfQ==
+=o8gF
+-----END PGP MESSAGE-----'
 
 RSpec.describe 'GPG.message' do
   it 'should reject two public keys' do
@@ -259,6 +278,15 @@ RSpec.describe 'GPG.message' do
     expect(msg).to be_verified
   end
 
+  it 'should handle messages, which are encrypted and signed with the wrong key' do
+    msg = GPG::Message.new(message_wrong_key_signed_encrypted, user_key, system_key)
+    expect(msg).to be_encrypted
+    expect(msg).to be_decryptable
+    expect(msg).to have_attributes(plaintext: "hi zammad, this is zammad\n")
+    expect(msg).to be_inline_signed
+    expect(msg).not_to be_verified
+  end
+
   it 'should handle signed, but unecrypted messages' do
     msg = GPG::Message.new(message_signed_normal, user_key, system_key)
     expect(msg.plaintext).not_to be_nil
@@ -287,7 +315,7 @@ RSpec.describe 'GPG.message' do
     expect(msg).not_to be_decryptable
     expect(msg).to be_inline_signed
     expect(msg).not_to be_verified
-    expect(msg).to have_attributes(plaintext: "I am the system?\n")
+    expect(msg).to have_attributes(plaintext: "I am the system\n")
   end
 
   it 'should handle clear signed messages' do

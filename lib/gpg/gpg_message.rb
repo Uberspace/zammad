@@ -49,11 +49,11 @@ module GPG
       valid = true
       decryption_error = nil
 
-      gpg_context do |crypto, *_|
+      gpg_context do |crypto, user_key, *_|
         begin
           data = crypto.decrypt(@content) do |signature|
             signed = true
-            valid &= signature.valid?
+            valid &= signature.valid? && signature.fpr == user_key
           end
 
           plaintext = data.to_s
@@ -75,11 +75,11 @@ module GPG
       valid = true
       plaintext = nil
 
-      gpg_context do |crypto, *_|
+      gpg_context do |crypto, user_key, *_|
         begin
           signature_plaintext = crypto.verify(@content) do |signature|
             signed = true
-            valid &= signature.valid?
+            valid &= signature.valid? && signature.fpr == user_key
           end
 
           plaintext = signature_plaintext.to_s
