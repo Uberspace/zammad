@@ -265,13 +265,22 @@ RSpec.describe 'GPG.message' do
   end
 
   it 'should handle detached signed messages' do
-    pending
     msg = GPG::Message.new("hi zammad4\n", user_key, system_key)
     expect(msg.plaintext).not_to be_nil
     expect(msg).not_to be_encrypted
     expect(msg).not_to be_decryptable
     expect(msg).not_to be_inline_signed
     expect(msg).not_to be_verified
-    expect(msg.verified?(message_signed_clear)).to be true
+    expect(msg.verified?(message_signed_detach)).to be true
+  end
+
+  it 'should reject invalid detached signed messages' do
+    msg = GPG::Message.new("hi zammad5\n", user_key, system_key)
+    expect(msg.plaintext).not_to be_nil
+    expect(msg).not_to be_encrypted
+    expect(msg).not_to be_decryptable
+    expect(msg).not_to be_inline_signed
+    expect(msg).not_to be_verified
+    expect(msg.verified?(message_signed_detach)).to be false
   end
 end

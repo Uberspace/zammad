@@ -87,8 +87,21 @@ module GPG
     end
 
     def verified?(detached_signature = nil)
-      raise NotImplementedError if !detached_signature.nil?
-      @inline_signed && @valid
+      if detached_signature.nil?
+        @inline_signed && @valid
+      else
+        begin
+          gpg_context do |crypto, *_|
+            valid = true
+            crypto.verify(detached_signature, :signed_text => @content) do |signature|
+              valid &= signature.valid?
+            end
+            valid
+          end
+        rescue GPGME::Error
+          return false
+        end
+      end
     end
 
     def encrypted?
