@@ -121,6 +121,30 @@ K7XDZNVfg6Yqzx/Gy5tWWentyt8dWshg+/uyqwyT5susY/eON/38+8Rap3L/apt3
 W2e/vSvWZeSaIPSH78vdDWnbup14BO0CJwq90lLTitdNywMA
 =UAkO
 -----END PGP MESSAGE-----'
+message_signed_normal_unkown = '-----BEGIN PGP MESSAGE-----
+
+owEBdgGJ/pANAwAIAZuhdrZ0L1DrAcsQYgBa5Jiid2hvIGFtIGk/CokBUgQAAQgA
+PBYhBNNFXwuvk9cAZ4ARz5uhdrZ0L1DrBQJa5JirHhx6YW1tYWQtb3RoZXItdXNl
+ckBleGFtcGxlLm9yZwAKCRCboXa2dC9Q67ROB/9dpeSU1pgSiOweWaNxJ1qI+yxt
++fA0l5nRr0ZWKtvhwzzCoQ1lcQoI5B9e2smFUBO2UcAFkCd7d52zLnhgaEFigMQ0
+uLc504v08QWebkxYYAC6HeqY5ghlcAzTJX/mIANLDNXqFV5AG+Pd4exIxdzVpsj1
+KVSGzLs2xnv8zlQO2YDV983fnQKqf/89QbrrayjWb+T/6QaSH1clA+8F2dyXjBBs
+ptdq2TGleSCgiSY4orIrdkae9QpFEGgnHgvXlMcmJZTbBqGICYrRFCAcWE13jWlN
+rw8PVeNiTGAAEW5RiyVIWlS3zilL4LivjOevIRFe7nAEmyAEkjZNhdD59yb9
+=7Tbz
+-----END PGP MESSAGE-----'
+message_signed_normal_system = '-----BEGIN PGP MESSAGE-----
+
+owGbwMvMwMFYOP9X0Ta9yrWMp8WSGKKezFTzVEjMVSjJSFUoriwuSc3l6mT0Y2Fg
+5GCwEFNk6e+aYjX3G//2pnt2V2EaWZmAujSlZKoSc3MTU3QhuhxSKxJzC3JS9ZLz
+cxm4OAVgip9LcTCsX/yjvUYgXHEyp7ij8DzWVqMpc54z/n7Edp21/2TUo7Zv9zS/
+bb07bVGbyfLWLRUPeey5vt6f8maFckTMLA/3xZvn28vyTliskexUVygwd6cgR6W/
+7mTTbt6TblMiCwyqF0Wvn/40ZNK7Mxk75DaeUXtkn+7qkcDeYdMUw2NjxtJ6YfnE
+DwozDwj8NHvBXjY1PPQY4+bnyp96Wrfb8dk4PxPS1d7WsElwvbr6qV0hl2NjTOeJ
+LM1Q+NgYeMavft8bCbcPN6YlXTo149Tv4olP5L8cuGOyJu7BrPK+hmNRv10Xqly/
+J3hwpXuWsVHNhWu3Y0T3TvrY5NR2f37zJNeHTCHRk1dHPot3jtfTf6UBAA==
+=kpOC
+-----END PGP MESSAGE-----'
 message_signed_clear = '-----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA256
 
@@ -243,6 +267,27 @@ RSpec.describe 'GPG.message' do
     expect(msg).to be_inline_signed
     expect(msg).to be_verified
     expect(msg).to have_attributes(plaintext: "hi zammad2\n")
+  end
+
+  it 'should reject messages signed by unknown key' do
+    msg = GPG::Message.new(message_signed_normal_unkown, user_key, system_key)
+    expect(msg.plaintext).not_to be_nil
+    expect(msg).not_to be_encrypted
+    expect(msg).not_to be_decryptable
+    expect(msg).to be_inline_signed
+    expect(msg).not_to be_verified
+    pending
+    expect(msg).to have_attributes(plaintext: "who am i?\n")
+  end
+
+  it 'should reject messages signed by system key' do
+    msg = GPG::Message.new(message_signed_normal_system, user_key, system_key)
+    expect(msg.plaintext).not_to be_nil
+    expect(msg).not_to be_encrypted
+    expect(msg).not_to be_decryptable
+    expect(msg).to be_inline_signed
+    expect(msg).not_to be_verified
+    expect(msg).to have_attributes(plaintext: "I am the system?\n")
   end
 
   it 'should handle clear signed messages' do
