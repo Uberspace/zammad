@@ -66,7 +66,9 @@ RSpec.describe 'GPG.context' do
 end
 
 user_key = keys['zammad-user@example.org']['pub']
+user_key_sec = keys['zammad-user@example.org']['sec']
 system_key = keys['zammad-system@example.com']['sec']
+system_key_pub = keys['zammad-system@example.com']['pub']
 # TODO: move messages to fixtures: https://relishapp.com/rspec/rspec-rails/v/3-5/docs/file-fixture
 message_to_system = '-----BEGIN PGP MESSAGE-----
 
@@ -287,5 +289,34 @@ RSpec.describe 'GPG.message' do
   it 'should refuse to encrypt a message' do
     msg = GPG::Message.new(message_to_system, user_key, system_key)
     expect { msg.encrypt() }.to raise_error('cannot encrypt an encrypted message')
+  end
+
+  it 'should encrypt messages' do
+    msg = GPG::Message.new('hi zammad, make secure plz', user_key, system_key)
+    encrypted = msg.encrypt()
+    expect(encrypted).to start_with '-----BEGIN PGP MESSAGE-----'
+    expect(encrypted).to end_with "-----END PGP MESSAGE-----\n"
+  end
+
+  it 'should decrypt its own encrypted, signed messages' do
+    msg = GPG::Message.new('hi', user_key, system_key)
+    encrypted = msg.encrypt()
+    expect(encrypted).to start_with '-----BEGIN PGP MESSAGE-----'  # just for sanity
+    msg = GPG::Message.new(encrypted, system_key_pub, user_key_sec)
+    expect(msg).to be_encrypted
+    expect(msg).to be_inline_signed
+    expect(msg).to be_verified
+    expect(msg).to have_attributes(plaintext: 'hi')
+  end
+
+  it 'should decrypt its own encrypted messages' do
+    msg = GPG::Message.new('hi2', user_key, system_key)
+    encrypted = msg.encrypt(false)
+    expect(encrypted).to start_with '-----BEGIN PGP MESSAGE-----'  # just for sanity
+    msg = GPG::Message.new(encrypted, system_key_pub, user_key_sec)
+    expect(msg).to be_encrypted
+    expect(msg).not_to be_inline_signed
+    expect(msg).not_to be_verified
+    expect(msg).to have_attributes(plaintext: 'hi2')
   end
 end

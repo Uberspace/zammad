@@ -121,7 +121,15 @@ module GPG
         raise ArgumentError, 'cannot encrypt an encrypted message'
       end
 
-      raise NotImplementedError
+      gpg_context do |crypto, user_key, system_key|
+        if sign
+          r = crypto.encrypt @content, always_trust: true, recipients: user_key, sign: true, signers: system_key
+        else
+          r = crypto.encrypt @content, always_trust: true, recipients: user_key
+        end
+
+        return r.to_s
+      end
     end
 
     def detached_signature
