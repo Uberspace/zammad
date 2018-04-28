@@ -117,6 +117,10 @@ module GPG
     attr_reader :decryption_error
 
     def encrypt(sign = true)
+      if encrypted?
+        raise ArgumentError, 'cannot encrypt an encrypted message'
+      end
+
       raise NotImplementedError
     end
 

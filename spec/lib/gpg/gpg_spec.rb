@@ -283,4 +283,9 @@ RSpec.describe 'GPG.message' do
     expect(msg).not_to be_verified
     expect(msg.verified?(message_signed_detach)).to be false
   end
+
+  it 'should refuse to encrypt a message' do
+    msg = GPG::Message.new(message_to_system, user_key, system_key)
+    expect { msg.encrypt() }.to raise_error('cannot encrypt an encrypted message')
+  end
 end
