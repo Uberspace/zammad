@@ -203,6 +203,9 @@ Lint/InterpolationCheck:
     - "test/unit/notification_factory_template_test.rb"
     - "test/unit/ticket_trigger_test.rb"
 
+Style/TrivialAccessors:
+  AllowPredicates: True  # https://github.com/bbatsov/rubocop/issues/2736
+
 # RSpec tests
 Style/NumericPredicate:
   Description: >-

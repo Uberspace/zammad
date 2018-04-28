@@ -5,65 +5,103 @@ module GPG
       @user_key = user_key  # TODO: enforce that this is public key
       @system_key = system_key  # TODO: enforce that this is secret key
 
-      gpg_context  # test if keys can be imported at all
+      process
     end
 
     def gpg_context
       GPG.context(@user_key, @system_key) do |*args|
-        yield(*args) if block_given?
+        yield(*args)
       end
+    end
+
+    def process
+      # TODO: reuse GPG.context?
+      @encrypted, c_signed, c_valid, c_plaintext, @decryption_error = try_decrypt
+      i_signed, i_valid, i_plaintext = try_inline_verify
+
+      @inline_signed = c_signed || i_signed
+
+      @valid = []
+      @valid << c_valid if c_signed
+      @valid << i_valid if i_signed
+      @valid = @inline_signed && @valid.all?
+
+      @plaintext = @content if !@encrypted
+      @plaintext = i_plaintext if i_plaintext
+      @plaintext = c_plaintext if c_plaintext
+    end
+
+    def try_decrypt
+      signed = false
+      valid = true
+      decryption_error = nil
+
+      gpg_context do |crypto, *_|
+        begin
+          data = crypto.decrypt(@content) do |signature|
+            signed = true
+            valid &= signature.valid?
+          end
+
+          plaintext = data.to_s
+        rescue GPGME::Error::NoData => exc
+          return false, false, false, nil, exc
+        rescue GPGME::Error::DecryptFailed => exc
+          return true, false, false, nil, exc
+        rescue GPGME::Error => exc
+          return true, false, false, nil, exc
+        end
+      end
+
+      valid = false if !signed
+      [true, signed, valid, plaintext, nil]
+    end
+
+    def try_inline_verify
+      signed = false
+      valid = true
+      plaintext = nil
+
+      gpg_context do |crypto, *_|
+        begin
+          signature_plaintext = crypto.verify(@content) do |signature|
+            signed = true
+            valid &= signature.valid?
+          end
+
+          plaintext = signature_plaintext.to_s
+        rescue GPGME::Error::NoData => e
+          signed = false
+        rescue GPGME::Error::General => e
+          signed = true
+          valid = false
+        end
+      end
+
+      valid = false if !signed
+      [signed, valid, plaintext]
     end
 
     def inline_signed?
-      # "normal" signature starting with '-----BEGIN PGP MESSAGE-----', have to ask API
-      # "clear" signature, not encrypted starting with '-----BEGIN PGP SIGNED MESSAGE-----'
-      raise NotImplementedError
+      @inline_signed
     end
 
     def verified?(detached_signature = nil)
-      raise NotImplementedError
-    end
-
-    def verify_error
-      raise NotImplementedError
-    end
-
-    def verified_key
-      raise NotImplementedError
+      raise NotImplementedError if !detached_signature.nil?
+      @inline_signed && @valid
     end
 
     def encrypted?
-      @content.start_with?('-----BEGIN PGP MESSAGE-----') && @content.end_with?('-----END PGP MESSAGE-----')
+      @encrypted
     end
 
     def decryptable?
-      return false unless encrypted?
-      return false if plaintext.nil?  # TODO: cache result, this is expensive
-      true
+      encrypted? && !@plaintext.nil?
     end
 
-    def plaintext
-      if !encrypted?
-        @content
-      else
-        gpg_context do |crypto, *_|
-          begin
-            data = crypto.decrypt(@content) do |signature|
-              nil
-            end
-            return data.to_s
-          rescue Exception => e  # TODO: scope this to GPG errors only
-            @decryption_error = e
-            return nil
-          end
-        end
-      end
-    end
-
-    def decryption_error
-      # TODO: what if we did not attempt to decrypt yet?
-      @decryption_error
-    end
+    # TODO: return input when decryption failed?
+    attr_reader :plaintext
+    attr_reader :decryption_error
 
     def encrypt(sign = true)
       raise NotImplementedError

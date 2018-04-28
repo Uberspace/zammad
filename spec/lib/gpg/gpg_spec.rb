@@ -80,6 +80,7 @@ QGjZEwPlaIv4fNiQddBwG7fxhCAb7YKbR7j/wafKmao1876jQ35kTS+F6di5VtR2
 CUfm92g2
 =3R2k
 -----END PGP MESSAGE-----'
+message_to_system_invalid = message_to_system.tr('=3R2k', '=2R2k')
 message_to_unknown_key = '-----BEGIN PGP MESSAGE-----
 
 hQIMAwAAAAAAAAAAARAAhDveX4y7SZOFv1LCk2YfMYiizQSBwqS5OkleqCBGaI6T
@@ -197,10 +198,7 @@ RSpec.describe 'GPG.message' do
   end
 
   it 'should handle invalid encrypted messages' do
-    msg = GPG::Message.new('-----BEGIN PGP MESSAGE-----
-
-hQIMAwAAAAAAAAAAARAAhDveX4y7SZOFv1LCk2YfMYiizQSBwqS5OkleqCBGaI6T
------END PGP MESSAGE-----', user_key, system_key)
+    msg = GPG::Message.new(message_to_system_invalid, user_key, system_key)
     expect(msg).to be_encrypted
     expect(msg).not_to be_decryptable
     expect(msg).to have_attributes(plaintext: nil, decryption_error: be_a(GPGME::Error::NoData))
@@ -223,14 +221,11 @@ hQIMAwAAAAAAAAAAARAAhDveX4y7SZOFv1LCk2YfMYiizQSBwqS5OkleqCBGaI6T
     expect(msg).to be_encrypted
     expect(msg).to be_decryptable
     expect(msg).to have_attributes(plaintext: "hi zammad, secretly signed\n")
-
-    pending
     expect(msg).to be_inline_signed
     expect(msg).to be_verified
   end
 
   it 'should handle signed, but unecrypted messages' do
-    pending
     msg = GPG::Message.new(message_signed_normal, user_key, system_key)
     expect(msg.plaintext).not_to be_nil
     expect(msg).not_to be_encrypted
@@ -241,7 +236,6 @@ hQIMAwAAAAAAAAAAARAAhDveX4y7SZOFv1LCk2YfMYiizQSBwqS5OkleqCBGaI6T
   end
 
   it 'should handle clear signed messages' do
-    pending
     msg = GPG::Message.new(message_signed_clear, user_key, system_key)
     expect(msg.plaintext).not_to be_nil
     expect(msg).not_to be_encrypted
@@ -261,7 +255,6 @@ hQIMAwAAAAAAAAAAARAAhDveX4y7SZOFv1LCk2YfMYiizQSBwqS5OkleqCBGaI6T
   end
 
   it 'should reject invalid clear signed messages' do
-    pending
     msg = GPG::Message.new(message_signed_clear_invalid, user_key, system_key)
     expect(msg.plaintext).not_to be_nil
     expect(msg).not_to be_encrypted
