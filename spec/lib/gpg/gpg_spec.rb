@@ -178,6 +178,14 @@ tuLlXruVL/YFn/UdQlR7f8pmWnEQJOSWMmbdLAdRwzbsF1lPl5Hjxqt6cXy5FvCK
 -----END PGP MESSAGE-----'
 
 RSpec.describe 'GPG.message' do
+  it 'should reject two public keys' do
+    expect { GPG::Message.new('', user_key, system_key_pub) }.to raise_error 'no secret key provided'
+  end
+
+  it 'should reject two secret keys' do
+    expect { GPG::Message.new('', user_key_sec, system_key) }.to raise_error 'no public key provided'
+  end
+
   it 'should handle unecrypted messages' do
     msg = GPG::Message.new('foo', user_key, system_key)
     expect(msg).not_to be_encrypted

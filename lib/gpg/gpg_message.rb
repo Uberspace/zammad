@@ -5,12 +5,25 @@ module GPG
       @user_key = user_key  # TODO: enforce that this is public key
       @system_key = system_key  # TODO: enforce that this is secret key
 
+      check_keys
       process
     end
 
     def gpg_context
       GPG.context(@user_key, @system_key) do |*args|
         yield(*args)
+      end
+    end
+
+    def check_keys
+      gpg_context do |*_|
+        secret = GPGME::Key.find(:secret)
+        public = GPGME::Key.find(:public)
+
+        raise ArgumentError, 'no secret key provided' if secret.empty?
+        raise ArgumentError, 'no public key provided' if public.empty?
+        # private keys bring their own public keys
+        raise ArgumentError, 'no public key provided' if secret.length + public.length > 3
       end
     end
 
